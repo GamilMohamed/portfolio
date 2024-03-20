@@ -1,4 +1,7 @@
-import { WebSocketServer } from 'ws';
+const ws = require('ws');
+
+const WebSocketServer = ws.Server;
+
 
 const wss = new WebSocketServer({ 
   port: 8080,
