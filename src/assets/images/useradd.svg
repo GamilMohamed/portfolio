@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 496 512">
+<linearGradient id="gradient" x1="0.5" y1="1" x2="0.5" y2="0">
+  <stop offset="5%" stopColor="#cccccc"/>
+  <stop offset="30%" stopColor="#d9d9d9"/>
+  <stop offset="50%" stopColor="#e5e5e5"/>
+  <stop offset="100%" stopColor="#ffffff"/>
+</linearGradient>
+
+<filter id="bevel" filterUnits="objectBoundingBox" x="-10%" y="-10%" width="150%" height="150%">
+  <feGaussianBlur in="SourceAlpha" stdDeviation="0.5" result="blur"/>
+  <feSpecularLighting in="blur" surfaceScale="10" specularConstant="3.5" specularExponent="10" result="specOut" lightingColor="#ffffff">
+    <fePointLight x="-5000" y="-10000" z="0000"/>
+  </feSpecularLighting>
+  <feComposite in="specOut" in2="SourceAlpha" operator="in" result="specOut2"/>
+  <feComposite in="SourceGraphic" in2="specOut2" operator="arithmetic" k1="0" k2="1" k3="1" k4="0" result="litPaint" />
+</filter>
+<g fill='white' style={{ transform: `translate(10px,-165px)` }}>
+  <path d="M70.023 203.39H39.039c-5.882 0-10.651 4.769-10.651 10.651v30.985c0 5.882 4.769 10.651 10.651 10.651h30.985c5.882 0 10.651-4.769 10.651-10.651v-30.985c-.001-5.883-4.769-10.651-10.652-10.651zm-30.984 19.365a3.873 3.873 0 1 1 7.746 0 3.873 3.873 0 0 1-7.746 0zm27.228 17.546c-.251.203-4.577 4.656-11.737 4.722l-.026.001c-3.548-.001-6.313-1.211-8.122-2.423-1.822-1.221-2.749-2.428-2.89-2.61a2.904 2.904 0 0 1 .582-4.068 2.9 2.9 0 0 1 4.042.553h.001a3.581 3.581 0 0 0 .296.323c.25.25.652.607 1.191.966 1.093.721 2.678 1.445 4.925 1.451 4.148.053 7.39-2.763 7.629-3.023l.006-.006.001.002a2.902 2.902 0 0 1 4.101.005 2.902 2.902 0 0 1 .001 4.107zm-.117-13.673a3.874 3.874 0 1 1 .002-7.748 3.874 3.874 0 0 1-.002 7.748zm40.711-37.23H95.924v-10.937c0-.671-.544-1.215-1.215-1.215h-6.076c-.671 0-1.215.544-1.215 1.215v10.937H76.481c-.671 0-1.215.544-1.215 1.215v6.076c0 .672.544 1.215 1.215 1.215h10.937v10.937c0 .672.544 1.215 1.215 1.215h6.076c.671 0 1.215-.543 1.215-1.215v-10.937h10.937c.671 0 1.215-.543 1.215-1.215v-6.076c0-.671-.544-1.215-1.215-1.215z" />
+</g>
+</svg>
