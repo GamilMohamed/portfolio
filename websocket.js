@@ -20,9 +20,14 @@ wss.on('connection', function connection(ws, req) {
     console.log('received: %s', data);
     // Echo the received message back to all clients
     wss.clients.forEach(function each(client) {
-      if (client !== ws && client.readyState === ws.OPEN) {
+      if (client.readyState === ws.OPEN) {
         console.log('sending: %s to client, %s', data, client);
         client.send(data.toString());
+        const message = {
+          type: 'message',
+          data: data.toString(),
+          size: clients.size
+        };
       }
     });
   });
