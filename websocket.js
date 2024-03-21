@@ -1,56 +1,51 @@
-const ws = require('ws');
+const routes = {
+  '/login': handleLogin,
+  '/message': handleMessage,
+};
 
-const WebSocketServer = ws.Server;
+// WebSocket connection handling
+wss.on('connection', (ws, req) => {
+  console.log('Client connected');
 
-const wss = new WebSocketServer({ 
-  port: 5000,
-  cors: {
-    origin: "*",
-    methods: ["GET", "POST"]
-  }
-});
-
-let clients = new Set();
-
-wss.on('connection', function connection(ws, req) {
-  
-  clients.add(ws);
-  wss.clients.forEach(function each(client) {
-    if (client.readyState === ws.OPEN) {
-      client.send(JSON.stringify({ message: 'Qqun a rejoint', size: clients.size, global: true, join: true}));
-    }
-  }
-  );
-
-  // add user to clients
-  // print  
-  console.log('Client connected and size: ' + clients.size);
-
-  // when receive message from client
-  ws.on('message', function incoming(data) {
-    console.log('received: %s', data);
-    // Echo the received message back to all clients
-    wss.clients.forEach(function each(client) {
-      if (client.readyState === ws.OPEN) {
-        console.log('sending: %s to client, %s', data, client);
-        const message = JSON.stringify({ message: data.toString(), size: clients.size, global: false});
-        console.log(message);
-        client.send(message);
+  // Handle login
+  ws.on('message', (data) => {
+    try {
+      const { route, message } = JSON.parse(data);
+      console.log("route is", route, "message is", message)
+      const handler = routes[route];
+      if (handler) {
+        handler(ws, message);
+      } else {
+        console.log('Unknown route:', route);
       }
-    });
+    } catch (error) {
+      console.error('Error parsing message:', error);
+    }
   });
 
-  ws.on('close', function() {
-    clients.delete(ws);
-    wss.clients.forEach(function each(client) {
-      if (client.readyState === ws.OPEN) {
-        client.send(JSON.stringify({ message: 'Qqun a quitté', size: clients.size, global: true, join: false }));
-      }
-    }
-    );
-    console.log('Client disconnected');
+  ws.on('close', () => {
+    broadcastMessage(ws, 'Anonyme a quitté le chat', '/logout');
   });
 });
 
+// Route handlers
+function handleLogin(message) {
+  // For anonymous users, no need to store any data
+  ws.send(JSON.stringify({ route: '/login', global: true, message: 'Anonyme a rejoint le chat'}));
+}
+
+function handleMessage(message) {
+  // Broadcast message to all clients
+  broadcastMessage(ws, message, '/message');
+}
+
+// Broadcast message to all clients
+function broadcastMessage(message, route) {
+  wss.clients.forEach(client => {
+    if (client.readyState === WebSocket.OPEN) {   
+      client.send(JSON.stringify({ route: route, global: false, message: message }));
+    }
+  });
+}
 
 
