@@ -2,24 +2,31 @@ const ws = require('ws');
 
 const WebSocketServer = ws.Server;
 
-
 const wss = new WebSocketServer({ 
-  port: 8080,
+  port: 5000,
   cors: {
-    origin: "http://localhost:5173",
+    origin: "*",
     methods: ["GET", "POST"]
   }
 });
 
+let clients = new Set();
+
 wss.on('connection', function connection(ws) {
+  clients.add(ws);
+  console.log('Client connected');
   ws.on('message', function incoming(data) {
     console.log('received: %s', data);
-    // Echo the received message back to the client
+    // Echo the received message back to all clients
     wss.clients.forEach(function each(client) {
-      console.log('sending: %s', data);
-      console.log('client: %s', client);
-      client.send(data.toString());
+      if (client !== ws && client.readyState === ws.OPEN) {
+        client.send(data.toString());
+      }
     });
   });
 
+  ws.on('close', function() {
+    clients.delete(ws);
+    console.log('Client disconnected');
+  });
 });
