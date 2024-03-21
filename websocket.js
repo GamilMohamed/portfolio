@@ -17,7 +17,7 @@ wss.on('connection', function connection(ws, req) {
   clients.add(ws);
   wss.clients.forEach(function each(client) {
     if (client.readyState === ws.OPEN) {
-      client.send(JSON.stringify({ message: 'Qqun a rejoint', size: clients.size, global: true }));
+      client.send(JSON.stringify({ message: 'Qqun a rejoint', size: clients.size, global: true, join: true}));
     }
   }
   );
@@ -44,7 +44,7 @@ wss.on('connection', function connection(ws, req) {
     clients.delete(ws);
     wss.clients.forEach(function each(client) {
       if (client.readyState === ws.OPEN) {
-        client.send(JSON.stringify({ message: 'Qqun a quitté', size: clients.size }));
+        client.send(JSON.stringify({ message: 'Qqun a quitté', size: clients.size, global: true, join: false }));
       }
     }
     );
