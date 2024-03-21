@@ -12,14 +12,16 @@ const wss = new WebSocketServer({
 
 let clients = new Set();
 
-wss.on('connection', function connection(ws) {
+wss.on('connection', function connection(ws, req) {
   clients.add(ws);
-  console.log('Client connected');
+  console.log(req.headers);
+  console.log('Client connected and size: ' + clients.size);
   ws.on('message', function incoming(data) {
     console.log('received: %s', data);
     // Echo the received message back to all clients
     wss.clients.forEach(function each(client) {
       if (client !== ws && client.readyState === ws.OPEN) {
+        console.log('sending: %s to client, %s', data, client);
         client.send(data.toString());
       }
     });
