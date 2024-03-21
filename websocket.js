@@ -3,6 +3,18 @@ const routes = {
   '/message': handleMessage,
 };
 
+const ws = require('ws');
+const WebSocketServer = ws.Server;
+
+
+const wss = new WebSocketServer({ 
+  port: 8080,
+  cors: {
+    origin: "*",
+    // origin: "http://localhost:5173",
+    methods: ["GET", "POST"]
+  }
+});
 // WebSocket connection handling
 wss.on('connection', (ws, req) => {
   console.log('Client connected');
