@@ -17,7 +17,7 @@ wss.on('connection', function connection(ws, req) {
   clients.add(ws);
   wss.clients.forEach(function each(client) {
     if (client.readyState === ws.OPEN) {
-      client.send(JSON.stringify({ message: 'Qqun a rejoint', size: clients.size }));
+      client.send(JSON.stringify({ message: 'Qqun a rejoint', size: clients.size, global: true }));
     }
   }
   );
@@ -33,7 +33,7 @@ wss.on('connection', function connection(ws, req) {
     wss.clients.forEach(function each(client) {
       if (client.readyState === ws.OPEN) {
         console.log('sending: %s to client, %s', data, client);
-        const message = JSON.stringify({ message: data.toString(), size: clients.size });
+        const message = JSON.stringify({ message: data.toString(), size: clients.size, global: false});
         console.log(message);
         client.send(message);
       }
