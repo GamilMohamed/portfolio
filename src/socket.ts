@@ -7,7 +7,7 @@ let socket: any;
 const connectSocket = () => {
   if (!socket) {
     try {
-      socket = new WebSocket("ws://localhost:8080");
+      socket = new WebSocket("wss://portfoliows.dieriba.com");
 	  console.log("Connecting to socket", socket.readyState);
 	//   socket.onopen = () => {
 	// 	console.log("Connected to socket");

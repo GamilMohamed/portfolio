@@ -11,10 +11,10 @@
   /* border-inline: 1px solid white; */
   /* width: 100%; */
   /* display: block; */
-  text-align: center;
-  place-items: center;
-  display: flex;
-  flex-direction: column;
+  /* text-align: center; */
+  /* place-items: center;/ */
+  /* display: flex; */
+  /* flex-direction: column; */
 }
 
 .logo {
