@@ -3,6 +3,7 @@ import { connectSocket, socket } from "../socket";
 // import Time from "./Header/Time";
 // import { Link } from "react-router-dom";
 import styled from "styled-components";
+import { Link } from "react-router-dom";
 
 
 const Bloc = styled.div`
@@ -65,6 +66,7 @@ const Home: React.FC = () => {
 	useEffect(() => {
 	  connectSocket();
 	  socket.onopen = () => {
+      console.log("new user !! connected");
       const mes = JSON.stringify({route: "/login", message: "Someone joined the chat"});
   	  socket.send(mes);
 	  };
@@ -80,24 +82,24 @@ const Home: React.FC = () => {
 	  	appendMessage(mess);
 
 	  };
+
 	}, []);
   
   
-	const appendMessage = (newMessage: Message) => {
-	  if (newMessage.message === "" || newMessage.message === undefined) return ;
-	  setMessageList(prevMessageList => [...prevMessageList, newMessage]);
-	};
   
 	useEffect(() => {
-	console.log("nouveaux messages " + message);
-	if (socket.readyState === 1) {
-	  socket.send(message);
-	}
+    console.log("nouveaux messages <<");
+    if (socket.readyState === 1) {
+      socket.send(message);
+    }
 	},[message]);
   
-
+  const appendMessage = (newMessage: Message) => {
+    if (newMessage.message === "" || newMessage.message === undefined) return ;
+    setMessageList(prevMessageList => [...prevMessageList, newMessage]);
+  };
+  
   const blocRef = useRef<HTMLDivElement>(null);
-
   useEffect(() => {
     if (blocRef.current) {
       blocRef.current.scrollTop = blocRef.current.scrollHeight;
@@ -108,6 +110,7 @@ const Home: React.FC = () => {
   return (
     <div>
       <Title>42Chat</Title>
+      <Link to="/portfolio/casino"><button>Casino</button></Link>
       <Text  $joined={false} $global={false} $val={0} >Nombre de users connectés: {nbUsers}</Text>
       <Bloc  ref={blocRef}>
         <div>

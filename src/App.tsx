@@ -9,6 +9,8 @@ import { BrowserRouter } from "react-router-dom";
 // import CasinoFile from './pages/Casino';
 import Home from './pages/Home';
 import { useEffect } from 'react';
+import { DrawingGameProvider } from './pages/DrawingGame/DrawingContext';
+import CasinoFile from './pages/Casino';
 // import { connectSocket } from './socket';
 
 const homeroute = "/portfolio"
@@ -25,14 +27,14 @@ function App() {
       <div className="menu-game">
         {/* <Header lang={"fr"} /> */}
             <Routes>
-                {/* <Route
+                <Route
                   path={homeroute + "/casino"}
                     element={
                       <DrawingGameProvider>
                         <CasinoFile />
                       </DrawingGameProvider>
                     }
-                  /> */}
+                  />
               <Route
                 path={homeroute}
                 element={
