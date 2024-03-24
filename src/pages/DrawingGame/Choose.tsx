@@ -32,7 +32,7 @@ const Choose = () => {
   const { select, setSelect, isDrawer } = useDrawingGame();
   return (
     <>
-      <Select>is drawer{isDrawer && "true" || "false"}
+      <Select>
         {select === 0 && (
           <>
             {!isDrawer && (
