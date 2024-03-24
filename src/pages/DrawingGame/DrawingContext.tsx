@@ -5,13 +5,11 @@ import React, { createContext, useContext, useEffect, useState } from "react";
 // import toast from "react-hot-toast";
 
 interface DrawingGameContextProps {
-  error: string | null;
   select: number;
   setSelect: (select: number) => void;
   isDrawer: boolean;
-  isGuesser: boolean;
-  theDrawer: string | null;
   drawing: string;
+  listSocketMessage: string[];
 }
 
 const drawing = "/drawing";
@@ -29,10 +27,8 @@ export const enum DrawingEvent {
   Status = '/drawing/status',
   Logout = '/drawing/logout',
   Login = '/drawing/login',
+  GetState = '/drawing/getState',
 }
-
-
-// import { PSToast } from "../Friends/FriendsContext";
 
 const DrawingGameContext = createContext<DrawingGameContextProps | undefined>(
   undefined
@@ -41,96 +37,69 @@ const DrawingGameContext = createContext<DrawingGameContextProps | undefined>(
 export const DrawingGameProvider: React.FC<{ children: React.ReactNode }> = ({
   children,
 }) => {
-  const [error, setError] = useState<string | null>(null);
   const [select, setSelect] = useState(0);
   const [isDrawer, setIsDrawer] = useState(false);
-  const [isGuesser, setIsGuesser] = useState(false);
-  const [theDrawer, setTheDrawer] = useState<string | null>(null);
-  const [drawing, setDrawing] = useState<string>("");
+  const [listSocketMessage, setListSocketMessage] = useState<string[]>([]);
 
   useEffect(() => {
     connectSocket();
+    if (socket.readyState === 1) {
+      socket.onopen = () => {
+        console.log("Connected to socket");
+      }
+      socket.onclose = () => {
+        console.log("Disconnected from server");
+      }
+      socket.onmessage = (event: any) => {
+        const asjson = JSON.parse(event.data);
+        if (asjson.route === DrawingEvent.GetState) {
+          alert("GetState" + asjson.message);
+        }
+        setListSocketMessage([...listSocketMessage, event.data]);
+    }
+  }}, []);
+  useEffect(() => {
+    connectSocket();
 	  socket.onmessage = (event: any) => {
+      setListSocketMessage([...listSocketMessage, event.data]);
       const json = JSON.parse(event.data);
-      console.log("JSON: ", json);
       if (json.route === DrawingEvent.Drawing)
       {
         console.log("DRAWING FFFFFFFFOUND");
         setIsDrawer(true);
       }
+      if (json.route === DrawingEvent.GetState) {
+        // alert("GetState" + json.message);
+        const jsmess = JSON.parse(json.message);
+        alert("jsmess" + jsmess);
+      }
     }}, []);
-  useEffect(() => {
-    // socket.on(DrawingEvent.DRAWING, (data) => {
-      // setDrawing(data);
-    // });
 
-    // return () => {
-      // socket.off(DrawingEvent.DRAWING);
-    // };
-  }, []);
-
-  useEffect(() => {
-    // connectSocket();
-    // socket.send(JSON.stringify({ route: DrawingEvent.Login, message: "Someone is the drawer" }));
-    // socket.on(DrawingEvent.DRAWER, (data: string, image: string) => {
-      // console.log(image + " is drawing");
-      // PSToast(image, data + " is drawing");
-      // setTheDrawer(data);
-      // setIsGuesser(true);
-      // setIsDrawer(true);
-    // });
-
-    // socket.on(DrawingEvent.STATUS, (count: number) => {
-    //   setSelect(count);
-    // });
-
-    // socket.on(
-    //   DrawingEvent.LOGOUT,
-    //   (image: string, message: string, user: boolean) => {
-    //     if (user) {
-    //       // PSToast(image, message);
-    //       setIsDrawer(false);
-    //       setTheDrawer(null);
-    //     }
-    //   }
-    // );
-    // socket.on(DrawingEvent.EXCEPTION, (error: string) => {
-    //   setError(error);
-    // });
-
-    // return () => {
-    //   socket.emit(DrawingEvent.LOGOUT, null);
-    //   socket.off(DrawingEvent.LOGOUT);
-    //   socket.off(DrawingEvent.EXCEPTION);
-    //   socket.off(DrawingEvent.STATUS);
-    //   socket.off(DrawingEvent.DRAWER);
-    // };
-  }, []);
-
+  
   useEffect(() => {
     connectSocket();
-
-    if (select === 1) {
-      const mes = JSON.stringify({ route: DrawingEvent.Drawer, message: "You are the drawer" })
-      socket.send(mes);
-      setIsDrawer(true);
-    }
-    if (select === 2) {
-      const mes = JSON.stringify({ route: DrawingEvent.Guess, message: "Someone is guessing" })
-      socket.send(mes);
+    if (socket.readyState === 1) {
+      if (select === 1) {
+        const mes = JSON.stringify({ route: DrawingEvent.Drawer, message: "You are the drawer" })
+        alert(mes)
+        socket.send(mes);
+        setIsDrawer(true);
+      }
+      if (select === 2) {
+        const mes = JSON.stringify({ route: DrawingEvent.Guess, message: "Someone is guessing" })
+        socket.send(mes);
+      }
     }
   }, [select]);
 
   return (
     <DrawingGameContext.Provider
       value={{
-        error,
         select,
         setSelect,
         isDrawer,
-        isGuesser,
-        theDrawer,
         drawing,
+        listSocketMessage,
       }}
     >
       {children}

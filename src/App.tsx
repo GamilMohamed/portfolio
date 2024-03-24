@@ -11,6 +11,7 @@ import Home from './pages/Home';
 import { useEffect } from 'react';
 import { DrawingGameProvider } from './pages/DrawingGame/DrawingContext';
 import CasinoFile from './pages/Casino';
+import Test from './pages/Test';
 // import { connectSocket } from './socket';
 
 const homeroute = "/portfolio"
@@ -28,19 +29,25 @@ function App() {
         {/* <Header lang={"fr"} /> */}
             <Routes>
                 <Route
-                  path={homeroute + "/casino"}
+                  path="*"
                     element={
                       <DrawingGameProvider>
                         <CasinoFile />
                       </DrawingGameProvider>
                     }
                   />
-              <Route
+              {/* <Route
                 path={homeroute}
                 element={
                     <Home />
                 }
-              />
+              /> */}
+              {/* <Route 
+                path={homeroute + "/test"}
+                element={
+                  <Test />
+                }
+              /> */}
               </Routes>
                   </div>
             </BrowserRouter>

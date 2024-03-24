@@ -9,48 +9,30 @@ import { connectSocket, socket } from "../socket";
 const Titles = ["Drawing Game", "Drawer", "Guesser"];
 
 const CasinoFile = () => {
-  const {error, select} = useDrawingGame();
-  const [loadGame, setLoadGame] = useState(false);
-  useEffect(() => {
-    // console.log("new client in game");
-    // socket.send(JSON.stringify({ route: DrawingEvent.Login, message: "GAME JOINED" }));
-  }, []);
+  const {select, listSocketMessage} = useDrawingGame();
 
   useEffect(() => {
-    connectSocket();
-
-    if (select === 0) {
-      socket.send(JSON.stringify({ route: DrawingEvent.Login, message: "GAME JOINED" }));
-    }
-    if (select === 1) { 
-      socket.send(JSON.stringify({ route: DrawingEvent.Drawer, message: "DRAWER JOINED" }));
-    }
-    if (select === 2) {
-      socket.send(JSON.stringify({ route: DrawingEvent.Guesser, message: "GUESSER JOINED" }));
-    }
-  }, [select]);
-
-  useEffect(() => {
-	  socket.onmessage = (event: any) => {
-      const json = JSON.parse(event.data);
-      if (json.route === DrawingEvent.Exception) {
-        console.log("Error: ", json.message);
+    function getStateOfGame() {
+      connectSocket();
+      if (socket.readyState === 1) {
+        socket.send(JSON.stringify({ route: DrawingEvent.GetState, message: "Get state of game" }));
       }
     }
+    getStateOfGame();
   }, []);
+
   return (
       <div className="menu-game">
         <Title>{Titles[0]}</Title>
-        <button onClick={() =>setLoadGame(true)} > LOAD GAME </button>
-        { error === null && <>
-          {select === 0 && <Choose></Choose>}
-          {select === 1 && <Drawing></Drawing>}
-          {select === 2 && <Guesser></Guesser>}
-        </> || <div>{error}x</div>
+        {select === 0 && <Choose></Choose>}
+        {select === 1 && <Drawing></Drawing>}
+        {select === 2 && <Guesser></Guesser>}
+        <>
+        {listSocketMessage.map((message, index) => {
+          return <div key={index}> message[{index}]{message}</div>
         }
-
-    
-
+        )}
+        </>
       </div>
   );
 };

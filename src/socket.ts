@@ -2,7 +2,7 @@
 // import { useEffect } from "react";
 
 // let socket: Socket;
-let socket: any;
+let socket: WebSocket;
 
 const connectSocket = () => {
   if (!socket) {

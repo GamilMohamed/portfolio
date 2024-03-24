@@ -59,58 +59,58 @@ type Message = {
 };
 
 const Home: React.FC = () => {
-	const [message, setMessage] = useState("");
-	const [messageList, setMessageList] = useState<Message[]>([]);
-  const [nbUsers, setNbUsers] = useState(0);
+	// const [message, setMessage] = useState("");
+	// const [messageList, setMessageList] = useState<Message[]>([]);
+  // const [nbUsers, setNbUsers] = useState(0);
 
-	useEffect(() => {
-	  connectSocket();
-	  socket.onopen = () => {
-      console.log("new user !! connected");
-      const mes = JSON.stringify({route: "/login", message: "Someone joined the chat"});
-  	  socket.send(mes);
-	  };
-	  socket.onmessage = (event: any) => {
-      const json = JSON.parse(event.data);
-      setNbUsers(json.nbUsers);
-      if (event.data === "" || event.data === undefined ) return ;
-      const mess: Message = {
-        message: json.message,
-        global: json.global,
-        joined: json.joined
-      }
-	  	appendMessage(mess);
+	// useEffect(() => {
+	//   connectSocket();
+	//   socket.onopen = () => {
+  //     console.log("new user !! connected");
+  //     const mes = JSON.stringify({route: "/login", message: "Someone joined the chat"});
+  // 	  socket.send(mes);
+	//   };
+	//   socket.onmessage = (event: any) => {
+  //     const json = JSON.parse(event.data);
+  //     setNbUsers(json.nbUsers);
+  //     if (event.data === "" || event.data === undefined ) return ;
+  //     const mess: Message = {
+  //       message: json.message,
+  //       global: json.global,
+  //       joined: json.joined
+  //     }
+	//   	appendMessage(mess);
 
-	  };
+	//   };
 
-	}, []);
+	// }, []);
   
   
   
-	useEffect(() => {
-    console.log("nouveaux messages <<");
-    if (socket.readyState === 1) {
-      socket.send(message);
-    }
-	},[message]);
+	// useEffect(() => {
+  //   console.log("nouveaux messages <<");
+  //   if (socket.readyState === 1) {
+  //     socket.send(message);
+  //   }
+	// },[message]);
   
-  const appendMessage = (newMessage: Message) => {
-    if (newMessage.message === "" || newMessage.message === undefined) return ;
-    setMessageList(prevMessageList => [...prevMessageList, newMessage]);
-  };
+  // const appendMessage = (newMessage: Message) => {
+  //   if (newMessage.message === "" || newMessage.message === undefined) return ;
+  //   setMessageList(prevMessageList => [...prevMessageList, newMessage]);
+  // };
   
-  const blocRef = useRef<HTMLDivElement>(null);
-  useEffect(() => {
-    if (blocRef.current) {
-      blocRef.current.scrollTop = blocRef.current.scrollHeight;
-    }
-  }, [messageList]);
+  // const blocRef = useRef<HTMLDivElement>(null);
+  // useEffect(() => {
+  //   if (blocRef.current) {
+  //     blocRef.current.scrollTop = blocRef.current.scrollHeight;
+  //   }
+  // }, [messageList]);
 
   
   return (
     <div>
       <Title>42Chat</Title>
-      <Link to="/portfolio/casino"><button>Casino</button></Link>
+      {/* <Link to="/portfolio/casino"><button>Casino</button></Link>
       <Text  $joined={false} $global={false} $val={0} >Nombre de users connectés: {nbUsers}</Text>
       <Bloc  ref={blocRef}>
         <div>
@@ -131,7 +131,7 @@ const Home: React.FC = () => {
               (e.target as HTMLInputElement).value = "";
             }
           }}
-        />
+        /> */}
     </div>
   );
 };

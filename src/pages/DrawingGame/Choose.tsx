@@ -27,6 +27,7 @@ const Select = styled.div`
 //   background-color: #f5f5f5;
 `;
 
+
 const Choose = () => {
   const { select, setSelect, isDrawer } = useDrawingGame();
   return (
