@@ -35,9 +35,9 @@ const Selector = styled.div`
 function NewHome() {
 	
 	return (<>
-		<Box>
+		<Box className="animate__backInLeft" >
 			{Menus.map((menu, key) => {
-				return <Selector key={key} className="glitch">{menu}</Selector>
+				return <Selector key={key}>{menu}</Selector>
 			})}
 		</Box>
 	</>

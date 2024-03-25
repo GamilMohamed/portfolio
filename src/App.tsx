@@ -3,7 +3,7 @@ import { BrowserRouter } from "react-router-dom";
 import { DrawingGameProvider } from "./pages/DrawingGame/DrawingContext";
 import CasinoFile from "./pages/Casino";
 import NewHome from "./pages/NewHome/NewHome";
-
+import 'animate.css';
 const homeroute = "/portfolio";
 function App() {
   return (

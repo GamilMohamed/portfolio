@@ -86,6 +86,7 @@ body {
   animation: noise 1s steps(2) infinite;
 }
 
+
 @-webkit-keyframes noise {
   to {
     transform: translate3d(-7rem, 0, 0);
