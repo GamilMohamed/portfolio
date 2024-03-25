@@ -15,12 +15,9 @@ import Test from './pages/Test';
 // import { connectSocket } from './socket';
 
 const homeroute = "/portfolio"
+import io from 'socket.io-client';
 
 function App() {
-  // const [count, setCount] = useState(0)
-    useEffect(() => {
-      // connectSocket();
-    }, []);
 
   return (
     <>

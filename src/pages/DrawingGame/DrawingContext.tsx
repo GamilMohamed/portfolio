@@ -6,7 +6,7 @@ interface DrawingGameContextProps {
   isDrawer: boolean;
   drawing: string;
   listSocketMessage: string[];
-  gameState: GameState;
+  gameState: GameStateType;
   resetGame: () => void;
 }
 
@@ -32,7 +32,7 @@ const DrawingGameContext = createContext<DrawingGameContextProps | undefined>(
   undefined
 );
 
-type GameState = {
+export type GameStateType = {
   drawer: boolean;
   guesser: number;
   word: string;
@@ -44,7 +44,7 @@ export const DrawingGameProvider: React.FC<{ children: React.ReactNode }> = ({
   const [select, setSelect] = useState(0);
   const [isDrawer, setIsDrawer] = useState(false);
   const [listSocketMessage, setListSocketMessage] = useState<string[]>([]);
-  const [gameState, setGameState] = useState<GameState>([] as unknown as GameState);
+  const [gameState, setGameState] = useState<GameStateType>([] as unknown as GameStateType);
 
   useEffect(() => {
     connectSocket();
@@ -83,8 +83,7 @@ export const DrawingGameProvider: React.FC<{ children: React.ReactNode }> = ({
         console.log("ACTUAL STATE", json);
         // const state = [json["drawer"], json["guesser"], json["word"]];
         setGameState({ drawer: json["drawer"], guesser: json["guesser"], word: json["word"]});
-        if (json.drawer == 1)
-          setIsDrawer(true);
+        setIsDrawer(json.drawer == 1 ? true : false);
       }
     }}, []);
 

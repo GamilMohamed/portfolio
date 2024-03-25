@@ -5,6 +5,7 @@ import {useDrawingGame } from "./DrawingGame/DrawingContext";
 import Choose from "./DrawingGame/Choose";
 import { useEffect, useState } from "react";
 import axios from "axios";
+import GameState from "./GameState";
 // import { connectSocket, socket } from "../socket";
 
 const Titles = ["Drawing Game", "Drawer", "Guesser"];
@@ -36,7 +37,7 @@ const CasinoFile = () => {
         {select === 1 && <Drawing></Drawing>}
         {select === 2 && <Guesser></Guesser>}
         <>
-        State of Game:D:{gameState.drawer}G:{gameState.guesser}W:{gameState.word}
+        <GameState state={gameState} />
         </>
       </div>
   );
