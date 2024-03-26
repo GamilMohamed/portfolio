@@ -53,6 +53,8 @@ html {
   height: 100%;
 }
 body {
+  color: white;
+
   margin: 0;
   padding: 0;
   height: 100%;
@@ -139,7 +141,10 @@ body {
   }
 }
 
-.glitch {
-  color: white;
-  text-transform: uppercase;
+.menu-game{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  height: 100vh;
 }

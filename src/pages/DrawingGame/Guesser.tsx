@@ -6,6 +6,7 @@ import styled from "styled-components";
 // import Loading from "/src/assets/images/loading.svg"
 import { useDrawingGame } from "./DrawingContext";
 import { CenterEverything } from "./Drawing";
+import { socket } from "../../socket";
 // import Language from "@/src/Language";
 
 
@@ -28,9 +29,8 @@ const Input = styled.input`
 const Guesser = () => {
   const [word, setWord] = useState<string | null>(null);
   const { isDrawer, drawing } = useDrawingGame();
-  // const { t } = Language();
   useEffect(() => {
-    // socket.emit(DrawingEvent.GUESS, word);
+    socket.send(JSON.stringify({ route: "/drawing/guessedword", message: word }))
   }, [word]);
 
   return (

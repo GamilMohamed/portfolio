@@ -1,6 +1,7 @@
 // import { socket } from "../../socket";
 // import { DrawingEvent } from "@/shared/socket.event";
 import { useCallback, useEffect, useRef, useState } from 'react';
+import { socket } from '../../socket';
 // import toast from "react-hot-toast";
 
 interface CanvasProps {
@@ -29,6 +30,8 @@ const Canvas = ({ width, height, color, size, clear }: CanvasProps) => {
         const context = canvas.getContext('2d');
         if (context) {
             context.clearRect(0, 0, canvas.width, canvas.height);
+            const mes = JSON.stringify({ route: "/drawing/drawing", message: canvas.toDataURL() });
+            socket.send(mes)
             // socket.emit(DrawingEvent.DRAWING, canvasRef.current?.toDataURL());
         }
     }, [clear]);
@@ -64,6 +67,8 @@ const Canvas = ({ width, height, color, size, clear }: CanvasProps) => {
       },[isPainting, mousePosition]);
       
       useEffect(() => {
+        const mes = JSON.stringify({ route: "/drawing/drawing", message: canvasRef.current?.toDataURL() });
+        socket.send(mes)
         // socket.emit(DrawingEvent.DRAWING, canvasRef.current?.toDataURL());
         if (!canvasRef.current) {
           return;

@@ -2,11 +2,12 @@ import styled from "styled-components";
 import { Link } from "react-router-dom";
 
 export const Title = styled.h1`
-  font-family: "PS", sans-serif;
   margin-top: 25px;
   font-size: 40px;
-  // border: 1px solid white;
   margin-bottom: 100px;
+  color: white;
+  // background-color: #1a1a1a;
+  cursor: default;
 `;
 
 export const icons = {
@@ -47,30 +48,6 @@ export const LinkButton = styled(Link)`
   // width: 100%;
   &hover {
     color: #646cff;
-  }
-`;
-
-export const VideoViet = styled.div<{
-  $hex: string;
-}>`
-  position: fixed;
-  z-index: -1;
-  width: 100%;
-  height: 100%;
-  left: 0;
-  object-fit: cover;
-  &:before {
-    object-fit: cover;
-    content: "";
-    position: fixed;
-    left: 0;
-    background: linear-gradient(
-      180deg,
-      rgba(24, 102, 254, 0) 23%,
-      ${(props) => props.$hex} 100%
-    );
-    width: 100%;
-    height: 100%;
   }
 `;
 export interface Category {

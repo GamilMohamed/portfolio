@@ -2,15 +2,14 @@ import styled from "styled-components";
 import { useDrawingGame } from "./DrawingContext";
 
 const Buttons = styled.button`
-  align-items: center;
   height: 100px;
   width: 300px;
   font-size: 1.5rem;
+  border: none;
   border-radius: 10px;
-  letter-spacing: 1px;
+  letter-spacing: 3px;
   font-weight: bold;
   color: #DCDCDC;
-  margin: 10px;
 `;
 
 const Select = styled.div`
@@ -23,8 +22,7 @@ const Select = styled.div`
   justify-content: space-around;
   align-items: center;
   width: 100%;
-  height: 40vh;
-//   background-color: #f5f5f5;
+  // background-color: #f5f5f5;
 `;
 
 

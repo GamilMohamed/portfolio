@@ -1,16 +1,23 @@
 import React, { createContext, useContext, useEffect, useState } from "react";
 
 interface DrawingGameContextProps {
+  // option selected
   select: number;
+  // set option selected
   setSelect: (select: number) => void;
+  // is there a drawer ?
   isDrawer: boolean;
+  // drawing image
   drawing: string;
-  listSocketMessage: string[];
+  // game state
   gameState: GameStateType;
+  // reset game
   resetGame: () => void;
+  // is server connected
+  connected: boolean; 
 }
 
-const drawing = "/drawing";
+// const drawing = "/drawing";
 import { connectSocket, socket } from "../../socket";
 
 export const enum DrawingEvent {
@@ -26,6 +33,7 @@ export const enum DrawingEvent {
   Logout = '/drawing/logout',
   Login = '/drawing/login',
   GetState = '/drawing/getState',
+  Reset = '/drawing/reset',
 }
 
 const DrawingGameContext = createContext<DrawingGameContextProps | undefined>(
@@ -33,60 +41,77 @@ const DrawingGameContext = createContext<DrawingGameContextProps | undefined>(
 );
 
 export type GameStateType = {
+  // is there a drawer ?
   drawer: boolean;
+  // how many guesser ?
   guesser: number;
-  word: string;
+  // drawing image
+  drawing: string;
+  // number of users
+  clients: number;
 };
 
 export const DrawingGameProvider: React.FC<{ children: React.ReactNode }> = ({
   children,
 }) => {
+  const [drawing, setDrawing] = useState<string>("");
   const [select, setSelect] = useState(0);
   const [isDrawer, setIsDrawer] = useState(false);
-  const [listSocketMessage, setListSocketMessage] = useState<string[]>([]);
   const [gameState, setGameState] = useState<GameStateType>([] as unknown as GameStateType);
+  const [connected, setConnected] = useState(true);
+  // socket connexion
+  // parse socket message
+  function amIConnected() {
+    console.log("socket.readyState", socket.readyState);
+    if (socket.readyState === 1) {
+      return true;
+    }
+    if (socket.readyState === 3) {
+      window.location.reload();
+    }
+    return false;
+  }
+
+  
+  useEffect(() => {
+    connectSocket();
+    
+    socket.onclose = () => {
+      setInterval(() => {setConnected(amIConnected());}, 5000);
+      setConnected(false);
+    };
+    }, [socket]);
 
   useEffect(() => {
-    connectSocket();
-    if (socket.readyState === 1) {
-      socket.onopen = () => {
-        console.log("Connected to socket");
-      }
-      socket.onclose = () => {
-        console.log("Disconnected from server");
-      }
-    //   socket.onmessage = (event: any) => {
-    //     const asjson = JSON.parse(event.data);
-    //     alert("asjson" + asjson.route);
-    //     if (asjson.route === DrawingEvent.GetState) {
-    //       // alert("GetState" + asjson.message);
-    //     }
-    //     setListSocketMessage([...listSocketMessage, event.data]);
-    // }
-  }}, []);
-  useEffect(() => {
-    connectSocket();
+    // setConnected(connectSocket() === 1 ? true : false);
 	  socket.onmessage = (event: any) => {
-      setListSocketMessage([...listSocketMessage, event.data]);
-      console.log("EVENT DATA >>", event.data);
+      if (!event.data) {
+        return;
+      }
+
       const json = JSON.parse(event.data);
+      if (!json.route) {
+        return;
+      }
       console.log("JSON >>", json);
       if (json.route === "/test") {
         alert("test");
       }
-      if (json.route === DrawingEvent.Drawing)
-      {
-        console.log("DRAWING FFFFFFFFOUND");
-        setIsDrawer(true);
-      }
       if (json.route === DrawingEvent.GetState) {
-        console.log("ACTUAL STATE", json);
-        // const state = [json["drawer"], json["guesser"], json["word"]];
-        setGameState({ drawer: json["drawer"], guesser: json["guesser"], word: json["word"]});
-        setIsDrawer(json.drawer == 1 ? true : false);
+        console.log("NB USERS", json["clients"]);
+        setGameState({ drawer: json["drawer"], guesser: json["guesser"], drawing: json["drawing"], clients: json["clients"]});
+        setDrawing(json["drawing"]);
+        setIsDrawer(json.drawer ? true : false);
+      }
+      if (json.route === DrawingEvent.Drawing) {
+        setDrawing(json.message);
+      }
+      if (json.route === DrawingEvent.Reset) {
+        setSelect(0);
+        setIsDrawer(false);
+        setGameState({ drawer: false, guesser: 0, drawing: "", clients: gameState.clients});
       }
     }}, []);
-
 
     // RESET GAME
     function resetGame() {
@@ -96,13 +121,10 @@ export const DrawingGameProvider: React.FC<{ children: React.ReactNode }> = ({
     }
   
   useEffect(() => {
-    connectSocket();
     if (socket.readyState === 1) {
       if (select === 1) {
         const mes = JSON.stringify({ route: DrawingEvent.Drawer, message: "You are the drawer" })
-        // alert(mes)
         socket.send(mes);
-        setIsDrawer(true);
       }
       if (select === 2) {
         const mes = JSON.stringify({ route: DrawingEvent.Guess, message: "Someone is guessing" })
@@ -118,9 +140,9 @@ export const DrawingGameProvider: React.FC<{ children: React.ReactNode }> = ({
         setSelect,
         isDrawer,
         drawing,
-        listSocketMessage,
         gameState,
         resetGame,
+        connected,
       }}
     >
       {children}

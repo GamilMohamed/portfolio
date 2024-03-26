@@ -4,8 +4,8 @@ import Canvas from "./Canvas";
 // import { socket } from "@/src/socket";
 import styled from "styled-components";
 import { Word } from "./VarGame";
-import { connectSocket, socket } from "../../socket";
-import { DrawingEvent } from "./DrawingContext";
+import { socket } from "../../socket";
+// import { DrawingEvent } from "./DrawingContext";
 
 export const CenterEverything = styled.div`
   display: flex;
@@ -116,8 +116,6 @@ const Drawing = () => {
   const [clear, setClear] = useState<boolean>(false);
 
   useEffect(() => {
-    // connectSocket();
-    // socket.send(JSON.stringify({ route: DrawingEvent.Login, message: "Someone joined the Drawing" }));
   }
   , []);
 
@@ -135,10 +133,7 @@ const Drawing = () => {
   useEffect(() => {
     const random = Math.floor(Math.random() * ListDrawingWords.length);
     setWord(ListDrawingWords[random][1]);
-    // socket.emit(DrawingEvent.WORD, ListDrawingWords[random][0]);
-    // const random = Math.floor(Math.random() * ListDrawingWords.length);
-    // setWord(ListDrawingWords[fr]);
-    // socket.emit(DrawingEvent.WORD, ListDrawingWords[random]);
+    socket.send(JSON.stringify({ route: "/drawing/word", message: ListDrawingWords[random][0]}));
   }, []);
 
   return (
