@@ -208,7 +208,7 @@ Error generating stack: `+i.message+`
   background-color: ${e=>e.$val%2===0?"#222":"#333"};
   width: 100%;
   text-align: left;
-`;function b1(){const{chat:e}=qr();return R.jsxs("div",{children:[R.jsx("h1",{children:"Chat"}),R.jsx(q1,{children:e.map((t,n)=>R.jsx(Z1,{$val:n,children:t},n))})]})}const ev=["Drawing Game","Drawer","Guesser"],tv=fe.button`
+`;function b1(){const{chat:e}=qr();return R.jsxs("div",{children:[R.jsx("h1",{children:"Chat"}),R.jsx(q1,{children:e.map((t,n)=>R.jsx(Z1,{$val:n,children:t},n))})]})}const ev=["Jeu du dessin","Drawer","Guesser"],tv=fe.button`
 position: absolute;
 top: 15px;
 right: 15px;
