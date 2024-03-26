@@ -17,6 +17,9 @@ type Coordinate = {
     y: number;
 };
 
+let canvarefiter = 0;
+let contexiter = 0;
+
 const Canvas = ({ width, height, color, size, clear }: CanvasProps) => {
     const canvasRef = useRef<HTMLCanvasElement>(null);
     const [isPainting, setIsPainting] = useState(false);
@@ -29,9 +32,11 @@ const Canvas = ({ width, height, color, size, clear }: CanvasProps) => {
         const canvas: HTMLCanvasElement = canvasRef.current;
         const context = canvas.getContext('2d');
         if (context) {
+            contexiter += 1;
             context.clearRect(0, 0, canvas.width, canvas.height);
             const mes = JSON.stringify({ route: "/drawing/drawing", message: canvas.toDataURL() });
             socket.send(mes)
+            console.log("context", contexiter);
             // socket.emit(DrawingEvent.DRAWING, canvasRef.current?.toDataURL());
         }
     }, [clear]);
@@ -67,10 +72,13 @@ const Canvas = ({ width, height, color, size, clear }: CanvasProps) => {
       },[isPainting, mousePosition]);
       
       useEffect(() => {
+        canvarefiter += 1;
         const mes = JSON.stringify({ route: "/drawing/drawing", message: canvasRef.current?.toDataURL() });
         socket.send(mes)
+        console.log("canvas", canvarefiter);
         // socket.emit(DrawingEvent.DRAWING, canvasRef.current?.toDataURL());
         if (!canvasRef.current) {
+            console.log("left canvasRef.current");
           return;
         }
         const canvas: HTMLCanvasElement = canvasRef.current;

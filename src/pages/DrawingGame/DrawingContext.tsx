@@ -10,7 +10,7 @@ interface DrawingGameContextProps {
   // drawing image
   drawing: string;
   // game state
-  gameState: GameStateType;
+  gameState: GameStateType | undefined;
   // reset game
   resetGame: () => void;
   // is server connected
@@ -46,7 +46,7 @@ export type GameStateType = {
   // how many guesser ?
   guesser: number;
   // drawing image
-  drawing: string;
+  // drawing: string;
   // number of users
   clients: number;
 };
@@ -57,7 +57,7 @@ export const DrawingGameProvider: React.FC<{ children: React.ReactNode }> = ({
   const [drawing, setDrawing] = useState<string>("");
   const [select, setSelect] = useState(0);
   const [isDrawer, setIsDrawer] = useState(false);
-  const [gameState, setGameState] = useState<GameStateType>([] as unknown as GameStateType);
+  const [gameState, setGameState] = useState<GameStateType | undefined>(undefined);
   const [connected, setConnected] = useState(true);
   // socket connexion
   // parse socket message
@@ -98,10 +98,9 @@ export const DrawingGameProvider: React.FC<{ children: React.ReactNode }> = ({
         alert("test");
       }
       if (json.route === DrawingEvent.GetState) {
-        console.log("NB USERS", json["clients"]);
-        setGameState({ drawer: json["drawer"], guesser: json["guesser"], drawing: json["drawing"], clients: json["clients"]});
-        setDrawing(json["drawing"]);
-        setIsDrawer(json.drawer ? true : false);
+        console.log("NB USERS", json.message["clients"]);
+        setGameState({ drawer: json.message["drawer"], guesser: json.message["guesser"], clients: json.message["clients"]});
+        setIsDrawer(json.message["drawer"] ? true : false);
       }
       if (json.route === DrawingEvent.Drawing) {
         setDrawing(json.message);
@@ -109,7 +108,7 @@ export const DrawingGameProvider: React.FC<{ children: React.ReactNode }> = ({
       if (json.route === DrawingEvent.Reset) {
         setSelect(0);
         setIsDrawer(false);
-        setGameState({ drawer: false, guesser: 0, drawing: "", clients: gameState.clients});
+        setGameState({ drawer: false, guesser: 0, clients: gameState?.clients || 0});
       }
     }}, []);
 
@@ -127,7 +126,7 @@ export const DrawingGameProvider: React.FC<{ children: React.ReactNode }> = ({
         socket.send(mes);
       }
       if (select === 2) {
-        const mes = JSON.stringify({ route: DrawingEvent.Guess, message: "Someone is guessing" })
+        const mes = JSON.stringify({ route: DrawingEvent.Guesser, message: "Someone is guessing" })
         socket.send(mes);
       }
     }

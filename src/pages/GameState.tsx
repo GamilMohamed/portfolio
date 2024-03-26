@@ -1,59 +1,28 @@
-import { GameStateType, useDrawingGame } from "./DrawingGame/DrawingContext";
-// import React from "react";
-import styled from "styled-components";
-import { Show } from "./Show";
+import { useDrawingGame } from "./DrawingGame/DrawingContext";
+import { GameStateContainer, Line } from "../assets/data/Variables";
 
-const GameStateContainer = styled.div`
-	display: flex;
-	flex-direction: column;
-	justify-content: center;
-	align-items: center;
-`;
+function GameState() {
+  const { connected, gameState } = useDrawingGame();
 
-const Line = styled.p<{ $color?: boolean }>`
-	font-size: 1.5em;
-	font-style: italic;
-	padding-top: 0.5em;
-	color: ${(props) => (props.$color ? "green" : "red")};
-`;
+  if (gameState === undefined) return null;
 
-function GameState({ state }: { state: GameStateType }) {
-	const { connected } = useDrawingGame();
-	return (
-		<>
-			<GameStateContainer>
-				<div>
-					<Line $color={connected} >Connection is {connected ? "on" : "off"}</Line>
-					<Show>
-						<Show.When isTrue={connected && state.drawer}>
-							<Line $color={true}>There is a drawer</Line>
-						</Show.When>
-						<Show.When isTrue={connected && !state.drawer}>
-							<Line $color={false}>Missing a drawer</Line>
-						</Show.When>
-					</Show>
-					<Show>
-						<Show.When isTrue={connected && state.guesser > 1}>
-							<Line $color={true}>There are {state.guesser} guessers</Line>
-						</Show.When>
-						<Show.When isTrue={connected && state.guesser === 0}>
-							<Line $color={false}>There are no guessers</Line>
-						</Show.When>
-					</Show>
-					<Show>
-						<Show.When isTrue={connected && state.clients === 1}>
-							<Line $color={false}>You are alone !!</Line>
-						</Show.When>
-						<Show.When isTrue={connected && state.clients > 1}>
-							<Line $color={true}>There are {state.clients} users logged in</Line>
-						</Show.When>
-						<Show.When isTrue={connected && state.clients === 0}>
-							<Line $color={false}>There are no users</Line>
-						</Show.When>
-					</Show>
-				</div>
-			</GameStateContainer>
-		</>
-		);
+  return (
+    <>
+      <GameStateContainer>
+          <Line $color={connected}>
+            Connection is {connected ? "on" : "off"}
+          </Line>
+          <Line $color={gameState.drawer}>
+            {gameState.drawer ? "There is a drawer" : "Missing a drawer"}
+          </Line>
+          <Line $color={gameState.guesser as unknown as boolean}>
+           {gameState.guesser ? `There is ${gameState.guesser} guesser` : "There are no guesser"}{gameState.guesser > 1 ? "s" : ""} 
+          </Line> 
+          <Line $color={gameState.clients as unknown as boolean}>
+            {gameState.clients != 0 ? `There are ${gameState.clients} users logged in` : "You are alone !!"}
+          </Line>
+      </GameStateContainer>
+    </>
+  );
 }
 export default GameState;

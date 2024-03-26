@@ -45,7 +45,7 @@ const CasinoFile = () => {
         {select === 1 && <Drawing></Drawing>}
         {select === 2 && <Guesser></Guesser>}
         <>
-        <GameState state={gameState} />
+        <GameState/>
         </>
       </div>
   );
