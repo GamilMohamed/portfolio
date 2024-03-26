@@ -34,7 +34,7 @@ const CasinoFile = () => {
     gettest();
   }, []);
 
-  const {select, gameState} = useDrawingGame();
+  const {select} = useDrawingGame();
   return (
       <div className="menu-game">
         <Title>{Titles[0]}</Title>
