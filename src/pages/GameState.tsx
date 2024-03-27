@@ -1,13 +1,23 @@
 import { useDrawingGame } from "./DrawingGame/DrawingContext";
 import { GameStateContainer, Line } from "../assets/data/Variables";
+// import { useState } from "react";
+// import styled from "styled-components";
+
 
 function GameState() {
   const { connected, gameState } = useDrawingGame();
+  // const [show, setShow] = useState<boolean>(false);
 
   if (gameState === undefined) return null;
-
+  // if (!show)
+  //   return <>
+  //     {/* <GameStateContainer> */}
+  //         <ShowComponent onClick={() => setShow(!show)}>Show Status</ShowComponent>
+  //     {/* </GameStateContainer> */}
+  //   </>
   return (
     <>
+        {/* <ShowComponent onClick={() => setShow(!show)}>Hide Status</ShowComponent> */}
       <GameStateContainer>
           <Line $color={connected}>
             Connection is {connected ? "on" : "off"}

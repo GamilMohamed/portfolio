@@ -1,6 +1,6 @@
 // import { DrawingEvent } from "@/shared/socket.event";
 // import { socket } from "@/src/socket";
-import { useState, useEffect } from "react";
+import { useState, useEffect, SetStateAction } from "react";
 import styled from "styled-components";
 
 // import Loading from "/src/assets/images/loading.svg"
@@ -33,6 +33,13 @@ const Guesser = () => {
     socket.send(JSON.stringify({ route: "/drawing/guessedword", message: word }))
   }, [word]);
 
+  const handleKeyDown = (e: { key: string; currentTarget: { value: SetStateAction<string | null>; }; }) => {
+    if (e.key === "Enter") {
+      setWord(e.currentTarget.value);
+      e.currentTarget.value = ""; // This line will not work
+    }
+  };
+
   return (
     <>
       <CenterEverything>
@@ -52,8 +59,9 @@ const Guesser = () => {
         disabled={!isDrawer}
         placeholder={!isDrawer ? "No drawer yet" : "Guess the word"}
         type="text"
-        onChange={(e) => setWord(e.target.value)}
+        onKeyDown={handleKeyDown}
       />
+      <p>Press enter</p>
       </CenterEverything>
 
     </>

@@ -15,6 +15,8 @@ interface DrawingGameContextProps {
   resetGame: () => void;
   // is server connected
   connected: boolean; 
+  // chat
+  chat: string[];
 }
 
 // const drawing = "/drawing";
@@ -59,6 +61,7 @@ export const DrawingGameProvider: React.FC<{ children: React.ReactNode }> = ({
   const [isDrawer, setIsDrawer] = useState(false);
   const [gameState, setGameState] = useState<GameStateType | undefined>(undefined);
   const [connected, setConnected] = useState(true);
+  const [chat, setChat] = useState<string[]>([]);
   // socket connexion
   // parse socket message
   function amIConnected() {
@@ -71,8 +74,6 @@ export const DrawingGameProvider: React.FC<{ children: React.ReactNode }> = ({
     }
     return false;
   }
-
-  
   useEffect(() => {
     connectSocket();
     
@@ -94,11 +95,10 @@ export const DrawingGameProvider: React.FC<{ children: React.ReactNode }> = ({
         return;
       }
       console.log("JSON >>", json);
-      if (json.route === "/test") {
-        alert("test");
+      if (json.route === "/message") {
+        setChat(prevChat => [...prevChat, json.message].slice(-5));
       }
       if (json.route === DrawingEvent.GetState) {
-        console.log("NB USERS", json.message["clients"]);
         setGameState({ drawer: json.message["drawer"], guesser: json.message["guesser"], clients: json.message["clients"]});
         setIsDrawer(json.message["drawer"] ? true : false);
       }
@@ -142,6 +142,7 @@ export const DrawingGameProvider: React.FC<{ children: React.ReactNode }> = ({
         gameState,
         resetGame,
         connected,
+        chat
       }}
     >
       {children}
