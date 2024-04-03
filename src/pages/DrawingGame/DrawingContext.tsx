@@ -17,6 +17,12 @@ interface DrawingGameContextProps {
   connected: boolean; 
   // chat
   chat: string[];
+  // username
+  username: string;
+  // error
+  error: string;
+  // handleSetUserName
+  handleSetUserName: (username: string) => void;
 }
 
 // const drawing = "/drawing";
@@ -36,6 +42,10 @@ export const enum DrawingEvent {
   Login = '/drawing/login',
   GetState = '/drawing/getState',
   Reset = '/drawing/reset',
+  ReturnName = '/drawing/returnName',
+  Name = '/drawing/name',
+  Username = '/drawing/username',
+  NewDrawer = '/drawing/newDrawer',
 }
 
 const DrawingGameContext = createContext<DrawingGameContextProps | undefined>(
@@ -62,6 +72,15 @@ export const DrawingGameProvider: React.FC<{ children: React.ReactNode }> = ({
   const [gameState, setGameState] = useState<GameStateType | undefined>(undefined);
   const [connected, setConnected] = useState(true);
   const [chat, setChat] = useState<string[]>([]);
+
+  const [username, setUsername] = useState<string>("");
+  const [error, setError] = useState<string>("");
+
+  function handleSetUserName(username: string) {
+    connectSocket();
+    if (socket.readyState === 1)
+      socket.send(JSON.stringify({ route: DrawingEvent.Name, message: username }));
+  }
   // socket connexion
   // parse socket message
   function amIConnected() {
@@ -110,6 +129,19 @@ export const DrawingGameProvider: React.FC<{ children: React.ReactNode }> = ({
         setIsDrawer(false);
         setGameState({ drawer: false, guesser: 0, clients: gameState?.clients || 0});
       }
+      if (json.route === DrawingEvent.Exception) 
+      {
+        setError(json.message);
+      }
+      if (json.route === DrawingEvent.Username) 
+      {
+        setUsername(json.message);
+      }
+      if (json.route === DrawingEvent.NewDrawer) 
+      {
+        setSelect(1);
+        setIsDrawer(true);
+      }
     }}, []);
 
     // RESET GAME
@@ -142,7 +174,10 @@ export const DrawingGameProvider: React.FC<{ children: React.ReactNode }> = ({
         gameState,
         resetGame,
         connected,
-        chat
+        chat,
+        username,
+        error,
+        handleSetUserName,
       }}
     >
       {children}

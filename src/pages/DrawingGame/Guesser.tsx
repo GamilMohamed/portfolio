@@ -28,14 +28,14 @@ const Input = styled.input`
 
 const Guesser = () => {
   const [word, setWord] = useState<string | null>(null);
-  const { isDrawer, drawing } = useDrawingGame();
+  const { isDrawer, drawing, username } = useDrawingGame();
   useEffect(() => {
     socket.send(JSON.stringify({ route: "/drawing/guessedword", message: word }))
   }, [word]);
 
   const handleKeyDown = (e: { key: string; currentTarget: { value: SetStateAction<string | null>; }; }) => {
     if (e.key === "Enter") {
-      setWord(e.currentTarget.value);
+      setWord("[" + username + "] " + e.currentTarget.value);
       e.currentTarget.value = ""; // This line will not work
     }
   };
