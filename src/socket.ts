@@ -7,7 +7,7 @@ let socket: WebSocket;
 const connectSocket = () => {
   if (!socket) {
     try {
-      socket = new WebSocket("wss://portfoliows.dieriba.com");
+      socket = new WebSocket("wss://portfoliows.dieriba.com/drawing");
 	    console.log("Connecting to socket >>>>>>", socket.readyState);
     } catch (err) {
       console.log(err);
